@@ -6,6 +6,9 @@
 [Bb]uild
 [Ll]ibrary/
 [Gg]oogle/
+[Ll]ogs/
+[Pp]ackages/
+
 sysinfo.txt
 *.stackdump
 StreamingAssets/
@@ -15,6 +18,8 @@ StreamingAssets/
 # ===================================== #
 [Ee]xported[Oo]bj/
 .vs/
+.idea/
+.vscode/
 /*.userprefs
 /*.csproj
 /*.pidb
@@ -24,7 +29,7 @@ StreamingAssets/
 /*.unityproj
 /*.booproj
 /*.pdb
- 
+
 # ============ #
 # OS generated #
 # ============ #

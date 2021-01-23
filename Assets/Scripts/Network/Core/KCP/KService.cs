@@ -102,7 +102,11 @@ namespace ETModel
 			return this.channel;
 		}
 
+#if dynamic_kcp
 		public static void Output(IntPtr bytes, int count, IntPtr user)
+#else
+		public static void Output(byte[] bytes, int count, object user)
+#endif
 		{
 			if (Instance == null)
 			{

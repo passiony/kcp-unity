@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
+using Network;
 using UnityEngine;
 
 namespace ETModel
@@ -20,11 +21,14 @@ namespace ETModel
 		}
 	}
 
+#if dynamic_kcp
+
+#else
 	public class KChannel : AChannel
 	{
 		private Socket socket;
 
-		private IntPtr kcp;
+		private KCP kcp;
 
 		private readonly Queue<WaitSendBuffer> sendBuffer = new Queue<WaitSendBuffer>();
 
@@ -73,10 +77,10 @@ namespace ETModel
 				// ignored
 			}
 
-			if (this.kcp != IntPtr.Zero)
+			if (this.kcp != null)
 			{
-				Kcp.KcpRelease(this.kcp);
-				this.kcp = IntPtr.Zero;
+				kcp.Release();
+				this.kcp = null;
 			}
 			this.socket = null;
 			this.memoryStream.Dispose();
@@ -109,11 +113,11 @@ namespace ETModel
 
 			this.RemoteConn = remoteConn;
 
-			this.kcp = Kcp.KcpCreate(this.RemoteConn, new IntPtr(this.LocalConn));
+			this.kcp = new KCP(this.RemoteConn, new IntPtr(this.LocalConn));
 			SetOutput();
-			Kcp.KcpNodelay(this.kcp, 1, 10, 1, 1);
-			Kcp.KcpWndsize(this.kcp, 32, 32);
-			Kcp.KcpSetmtu(this.kcp, 470);
+			kcp.NoDelay(1, 10, 1, 1);
+			kcp.WndSize(32, 32);
+			kcp.SetMTU(470);
 
 			this.isConnected = true;
 			this.lastRecvTime = this.GetService().TimeNow;
@@ -215,7 +219,7 @@ namespace ETModel
 
 			try
 			{
-				Kcp.KcpUpdate(this.kcp, timeNow);
+				kcp.Update(timeNow);
 			}
 			catch (Exception e)
 			{
@@ -225,9 +229,9 @@ namespace ETModel
 			}
 
 
-			if (this.kcp != IntPtr.Zero)
+			if (this.kcp != null)
 			{
-				uint nextUpdateTime = Kcp.KcpCheck(this.kcp, timeNow);
+				uint nextUpdateTime = kcp.Check(timeNow);
 			}
 		}
 
@@ -249,11 +253,11 @@ namespace ETModel
 		{
 			this.isConnected = true;
 			
-			Kcp.KcpInput(this.kcp, date, offset, length);
+			kcp.Input(date, offset, length);
 
 			while (true)
 			{
-				int n = Kcp.KcpPeeksize(this.kcp);
+				int n = kcp.PeekSize();
 				if (n < 0)
 				{
 					return;
@@ -267,7 +271,7 @@ namespace ETModel
 				byte[] buffer = this.memoryStream.GetBuffer();
 				this.memoryStream.SetLength(n);
 				this.memoryStream.Seek(0, SeekOrigin.Begin);
-				int count = Kcp.KcpRecv(this.kcp, buffer, ushort.MaxValue);
+				int count = kcp.Recv(buffer,0, ushort.MaxValue);
 				if (n != count)
 				{
 					return;
@@ -287,7 +291,7 @@ namespace ETModel
 		{
 		}
 
-		public void Output(IntPtr bytes, int count)
+		public void Output(byte[] bytes, int count)
 		{
 			try
 			{
@@ -298,7 +302,8 @@ namespace ETModel
 				}
 
 				byte[] buffer = this.memoryStream.GetBuffer();
-				Marshal.Copy(bytes, buffer, 0, count);
+				
+				Buffer.BlockCopy(bytes, 0,buffer, 0, count);
 				this.socket.SendTo(buffer, 0, count, SocketFlags.None, this.remoteEndPoint);
 			}
 			catch (Exception e)
@@ -308,36 +313,24 @@ namespace ETModel
 			}
 		}
 		
-#if !ENABLE_IL2CPP
-		private KcpOutput kcpOutput;
-#endif
-
+		private KCP.OutputDelegate kcpOutput;
 		public void SetOutput()
 		{
-#if ENABLE_IL2CPP
-			Kcp.KcpSetoutput(this.kcp, KcpOutput);
-#else
-			// 跟上一行一样写法，pc跟linux会出错, 保存防止被GC
 			kcpOutput = KcpOutput;
-			Kcp.KcpSetoutput(this.kcp, kcpOutput);
-#endif
+			kcp.SetOutput(kcpOutput);
 		}
 
 
-#if ENABLE_IL2CPP
-		[AOT.MonoPInvokeCallback(typeof(KcpOutput))]
-#endif
-		public static int KcpOutput(IntPtr bytes, int len, IntPtr kcp, IntPtr user)
+		public static void KcpOutput(byte[] bytes, int len, object user)
         {
             KService.Output(bytes, len, user);
-            return len;
         }
 
         private void KcpSend(byte[] buffers, int length)
 		{
-			Kcp.KcpSend(this.kcp, buffers, length);
+			kcp.Send(buffers,0, length);
 		}
-
+		
 		private void Send(byte[] buffer, int index, int length)
 		{
 			if (isConnected)
@@ -351,10 +344,10 @@ namespace ETModel
 
 		public override void Send(MemoryStream stream)
 		{
-			if (this.kcp != IntPtr.Zero)
+			if (this.kcp != null)
 			{
 				// 检查等待发送的消息，如果超出两倍窗口大小，应该断开连接
-				if (Kcp.KcpWaitsnd(this.kcp) > 256 * 2)
+				if (kcp.WaitSnd() > 256 * 2)
 				{
 					this.OnError(ErrorCode.ERR_KcpWaitSendSizeTooLarge);
 					return;
@@ -366,4 +359,7 @@ namespace ETModel
 			Send(bytes, 0, size);
 		}
 	}
+
+#endif
+	
 }

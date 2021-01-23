@@ -163,6 +163,7 @@ namespace ETModel
 
 			e.RemoteEndPoint = null;
 			this.isConnected = true;
+			this.OnConnect((int)SocketError.Success);
 			
 			this.Start();
 		}

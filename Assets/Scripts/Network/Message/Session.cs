@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace ETModel
@@ -35,17 +31,33 @@ namespace ETModel
 		public Session(AChannel aChannel)
 		{
 			this.channel = aChannel;
-			channel.ErrorCallback += (c, e) =>
-			{
-				Debug.LogError("Error:"+e);
-				Network.Session.Dispose();
-			};
-			channel.ReadCallback += this.OnRead;
+
+			channel.ConnectCallback += OnConnect;
+			channel.ErrorCallback += OnError;
+			channel.ReadCallback += OnRead;
 		}
 		
+		private void OnConnect(AChannel channel, int code)
+		{
+			if (Network.OnConnect != null)
+			{
+				Network.OnConnect.Invoke(0);
+			}
+			Debug.Log("OnConnect" + code);
+		}
+		
+		private void OnError(AChannel channel, int code)
+		{
+			if (Network.OnConnect != null)
+			{
+				Network.OnError.Invoke(code);
+			}
+			Debug.LogError("OnError:" + code);
+			this.Dispose();
+		}
+
 		public void Dispose()
 		{
-			Network.Session.Dispose();
 			int error = this.channel.Error;
 			if (this.channel.Error != 0)
 			{
@@ -86,13 +98,9 @@ namespace ETModel
 
 		private void Run(MemoryStream memoryStream)
 		{
-			memoryStream.Seek(Packet.MessageIndex, SeekOrigin.Begin);
-			ushort opcode = BitConverter.ToUInt16(memoryStream.GetBuffer(), Packet.OpcodeIndex);
-
-			Debug.Log("receive msg："+opcode);
-			
-//			object message = this.Network.MessagePacker.DeserializeFrom(null, memoryStream);
-//			Network.MessageDispatcher.Dispatch(this, opcode, message);
+			memoryStream.Seek(0, SeekOrigin.Begin);
+			Network.MessageDispatcher.Dispatch(this, memoryStream.GetBuffer());
+			Network.ReceiveBytesHandle?.Invoke(memoryStream.GetBuffer());
 		}
 		
 		public void OnRead(MemoryStream memoryStream)
@@ -107,22 +115,28 @@ namespace ETModel
 			}
 		}
 		
-		public void Send(ushort opcode, object message=null)
+		public void Send(ushort opcode)
 		{
-			Debug.Log("send message："+opcode);
 			MemoryStream stream = this.Stream;
-			
-			stream.Seek(Packet.MessageIndex, SeekOrigin.Begin);
-			stream.SetLength(Packet.MessageIndex);
-//			this.Network.MessagePacker.SerializeTo(message, stream);
 			stream.Seek(0, SeekOrigin.Begin);
+			stream.SetLength(Packet.MessageIndex);
 			
 			opcodeBytes.WriteTo(0, opcode);
 			Array.Copy(opcodeBytes, 0, stream.GetBuffer(), 0, opcodeBytes.Length);
-
+						
 			this.Send(stream);
 		}
 
+		public void Send(byte[] buffers)
+		{
+			MemoryStream stream = this.Stream;
+			stream.Seek(0, SeekOrigin.Begin);
+			stream.SetLength(buffers.Length);
+			
+			Array.Copy(buffers, 0, stream.GetBuffer(), 0, buffers.Length);
+			this.Send(stream);
+		}
+		
 		public void Send(MemoryStream stream)
 		{
 			channel.Send(stream);

@@ -36,6 +36,7 @@ namespace ETModel
 		
 		private readonly uint createTime;
 
+		public uint LocalConn { get; private set; }
 		public uint RemoteConn { get; private set; }
 
 		private readonly MemoryStream memoryStream;
@@ -54,17 +55,6 @@ namespace ETModel
 			this.HandleConnnect(localConn);
 		}
 
-		public uint LocalConn
-		{
-			get
-			{
-				return (uint)this.Id;
-			}
-			set
-			{
-				this.Id = value;
-			}
-		}
 
 		public void Dispose()
 		{
@@ -122,7 +112,7 @@ namespace ETModel
 			this.kcp = Kcp.KcpCreate(this.RemoteConn, new IntPtr(this.LocalConn));
 			SetOutput();
 			Kcp.KcpNodelay(this.kcp, 1, 10, 1, 1);
-			Kcp.KcpWndsize(this.kcp, 256, 256);
+			Kcp.KcpWndsize(this.kcp, 32, 32);
 			Kcp.KcpSetmtu(this.kcp, 470);
 
 			this.isConnected = true;
@@ -147,9 +137,6 @@ namespace ETModel
 				buffer.WriteTo(1, LocalConn);
 				buffer.WriteTo(5, RemoteConn);
 				this.socket.SendTo(buffer, 0, 9, SocketFlags.None, remoteEndPoint);
-				
-				// 200毫秒后再次update发送connect请求
-				this.GetService().AddToUpdateNextTime(timeNow + 200, this.Id);
 			}
 			catch (Exception e)
 			{
@@ -173,9 +160,6 @@ namespace ETModel
 				buffer.WriteTo(0, KcpProtocalType.SYN);
 				buffer.WriteTo(1, this.LocalConn);
 				this.socket.SendTo(buffer, 0, 5, SocketFlags.None, remoteEndPoint);
-				
-				// 200毫秒后再次update发送connect请求
-				this.GetService().AddToUpdateNextTime(timeNow + 300, this.Id);
 			}
 			catch (Exception e)
 			{
@@ -244,7 +228,6 @@ namespace ETModel
 			if (this.kcp != IntPtr.Zero)
 			{
 				uint nextUpdateTime = Kcp.KcpCheck(this.kcp, timeNow);
-				this.GetService().AddToUpdateNextTime(nextUpdateTime, this.Id);
 			}
 		}
 
@@ -267,7 +250,6 @@ namespace ETModel
 			this.isConnected = true;
 			
 			Kcp.KcpInput(this.kcp, date, offset, length);
-			this.GetService().AddToUpdateNextTime(0, this.Id);
 
 			while (true)
 			{
@@ -354,7 +336,6 @@ namespace ETModel
         private void KcpSend(byte[] buffers, int length)
 		{
 			Kcp.KcpSend(this.kcp, buffers, length);
-			this.GetService().AddToUpdateNextTime(0, this.Id);
 		}
 
 		private void Send(byte[] buffer, int index, int length)

@@ -1,15 +1,16 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace ETModel
 {
 	public class OuterMessageDispatcher: IMessageDispatcher
 	{
-		public void Dispatch(Session session, ushort opcode, object message)
+		public void Dispatch(Session session, byte[] buffer)
 		{
-			//消息
-//			MessageInfo messageInfo = new MessageInfo(opcode, message);
-			
-			Debug.Log(opcode);
+			ushort opcode = BitConverter.ToUInt16(buffer, Packet.OpcodeIndex);
+//			object message = this.Network.MessagePacker.DeserializeFrom(null, memoryStream);
+			Test01.Receive();
+			Debug.Log("receive msg：" + opcode);
 		}
 	}
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using  UnityEngine;
 
 namespace ETModel
 {
@@ -12,9 +13,13 @@ namespace ETModel
 		public Session Session { get; private set; }
 		
 		public IMessagePacker MessagePacker { get; set; }
-
 		public IMessageDispatcher MessageDispatcher { get; set; }
 
+		public Action<int> OnConnect{ get; set; }
+		public Action<int> OnError{ get; set; }
+		public Action<byte[]> ReceiveBytesHandle{ get; set; }
+				
+		
 		public override void Init()
 		{
 			SynchronizationContext.SetSynchronizationContext(OneThreadSynchronizationContext.Instance);
@@ -69,15 +74,16 @@ namespace ETModel
 			this.Service.Update();
 		}
 
-		public void Send(ushort opcode, object message=null)
+		public void Send(ushort opcode)
 		{
+			Debug.Log("send message：" + opcode);
+
 			Session.Send(opcode);
 		}
 		
 		public void Dispose()
 		{
 			Session.Dispose();
-			Service.Dispose();
 		}
 	}
 }

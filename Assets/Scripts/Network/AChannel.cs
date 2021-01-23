@@ -12,7 +12,6 @@ namespace ETModel
 
 	public abstract class AChannel
 	{
-		public long Id;
 		public ChannelType ChannelType { get; }
 
 		public AService Service { get; }
@@ -23,6 +22,23 @@ namespace ETModel
 
 		public IPEndPoint RemoteAddress { get; protected set; }
 
+		
+		
+		private Action<AChannel, int> connectCallback;
+
+		public event Action<AChannel, int> ConnectCallback
+		{
+			add
+			{
+				this.connectCallback += value;
+			}
+			remove
+			{
+				this.connectCallback -= value;
+			}
+		}
+
+		
 		private Action<AChannel, int> errorCallback;
 
 		public event Action<AChannel, int> ErrorCallback
@@ -50,6 +66,11 @@ namespace ETModel
 				this.readCallback -= value;
 			}
 		}
+
+		public void OnConnect(int code)
+		{
+			this.connectCallback.Invoke(this, code);
+		}
 		
 		protected void OnRead(MemoryStream memoryStream)
 		{
@@ -64,7 +85,6 @@ namespace ETModel
 
 		protected AChannel(AService service, ChannelType channelType)
 		{
-			this.Id = IdGenerater.GenerateId();
 			this.ChannelType = channelType;
 			this.Service = service;
 		}

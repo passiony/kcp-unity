@@ -67,11 +67,21 @@ namespace ETModel
 				int messageLength = 0;
 				try
 				{
+//					switch (flag)
+//					{
+//						case KcpProtocalType.ACK: // 连接
+//							this.channel.OnConnect((int)SocketError.Success);
+//							break;
+//						case KcpProtocalType.FIN: // 断开
+//							break;
+//					}
+
 					messageLength = this.socket.ReceiveFrom(this.cache, ref this.ipEndPoint);
 					if (messageLength < 1)
 					{
 						continue;
 					}
+					
 					
 					this.channel.HandleRecv(this.cache, 0, messageLength);
 				}
@@ -111,7 +121,6 @@ namespace ETModel
 		public override AChannel ConnectChannel(IPEndPoint remoteEndPoint)
 		{
 			uint localConn = (uint)RandomHelper.RandomNumber(1000, int.MaxValue);
-
 			this.channel = new KChannel(localConn, this.socket, remoteEndPoint, this);
 			return channel;
 		}
@@ -122,11 +131,6 @@ namespace ETModel
 			return this.ConnectChannel(ipEndPoint2);
 		}
 
-		// 客户端channel很少,直接每帧update所有channel即可,这样可以消除TimerOut方法的gc
-		public void AddToUpdateNextTime(long time, long id)
-		{
-		}
-		
 		public override void Update()
 		{
 			this.TimeNow = (uint) (TimeHelper.ClientNow() - this.StartTime);

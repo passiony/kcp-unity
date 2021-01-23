@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using Microsoft.IO;
 using UnityEngine;
 
-namespace ETModel
+namespace Network
 {
 	/// <summary>
 	/// 封装Socket,将回调push到主线程处理

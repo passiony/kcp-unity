@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace ETModel
+namespace Network
 {
     public class CircularBuffer: Stream
     {

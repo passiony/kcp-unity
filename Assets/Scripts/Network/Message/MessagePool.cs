@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;		
 
-namespace ETModel
+namespace Network
 {
 	// 客户端为了0GC需要消息池，服务端消息需要跨协程不需要消息池
 	public class MessagePool

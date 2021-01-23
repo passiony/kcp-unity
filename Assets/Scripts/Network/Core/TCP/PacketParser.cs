@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace ETModel
+namespace Network
 {
 	public enum ParserState
 	{

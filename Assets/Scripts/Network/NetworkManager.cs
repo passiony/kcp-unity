@@ -5,7 +5,7 @@ using System.Net;
 using System.Threading;
 using  UnityEngine;
 
-namespace ETModel
+namespace Network
 {
 	public class NetworkManager : MonoSingleton<NetworkManager>
 	{

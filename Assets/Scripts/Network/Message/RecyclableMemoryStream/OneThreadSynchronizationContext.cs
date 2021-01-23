@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Threading;
 
-namespace ETModel
+namespace Network
 {
 	public class OneThreadSynchronizationContext : SynchronizationContext
 	{

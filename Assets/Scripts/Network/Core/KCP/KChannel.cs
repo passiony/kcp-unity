@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using Network;
 using UnityEngine;
 #if dynamic_kcp
 	using System.Runtime.InteropServices;
 #endif
 
-namespace ETModel
+namespace Network
 {
 	public struct WaitSendBuffer
 	{

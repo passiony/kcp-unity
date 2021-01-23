@@ -5,7 +5,7 @@ using System.Net.Sockets;
 using Microsoft.IO;
 using UnityEngine;
 
-namespace ETModel
+namespace Network
 {
 	public static class KcpProtocalType
 	{

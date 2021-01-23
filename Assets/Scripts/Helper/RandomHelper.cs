@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ETModel
+namespace Network
 {
 	public static class RandomHelper
 	{

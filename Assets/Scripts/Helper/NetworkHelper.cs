@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace ETModel
+namespace Network
 {
 	public static class NetworkHelper
 	{

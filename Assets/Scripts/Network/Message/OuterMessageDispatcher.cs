@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace ETModel
+namespace Network
 {
 	public class OuterMessageDispatcher: IMessageDispatcher
 	{

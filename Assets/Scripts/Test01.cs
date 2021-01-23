@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using ETModel;
+using Network;
 using UnityEngine;
 
 public class Test01 : MonoBehaviour
 {
-//    private string address = "127.0.0.1:12346";
-    private string address = "10.200.10.192:3655";
+    private string address = "127.0.0.1:12346";
+//    private string address = "10.200.10.192:3655";
 
     public static long starttime = 0;
         

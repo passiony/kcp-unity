@@ -1,4 +1,4 @@
-﻿namespace ETModel
+﻿namespace Network
 {
 	public struct MessageInfo
 	{

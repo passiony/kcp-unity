@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 using UnityEngine;
 
-namespace ETModel
+namespace Network
 {
 	public sealed class Session
 	{

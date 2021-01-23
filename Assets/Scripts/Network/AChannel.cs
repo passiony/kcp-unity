@@ -2,7 +2,7 @@
 using System.IO;
 using System.Net;
 
-namespace ETModel
+namespace Network
 {
 	public enum ChannelType
 	{

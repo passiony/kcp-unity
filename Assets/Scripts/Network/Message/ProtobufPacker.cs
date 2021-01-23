@@ -3,7 +3,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 
-namespace ETModel
+namespace Network
 {
 	public class ProtobufPacker : IMessagePacker
 	{

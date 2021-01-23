@@ -5,7 +5,7 @@ using System.Net.WebSockets;
 using Microsoft.IO;
 using UnityEngine;
 
-namespace ETModel
+namespace Network
 {
     public class WService: AService
     {

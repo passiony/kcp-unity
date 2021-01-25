@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using UnityEngine;
 
 namespace Network
 {
@@ -69,6 +70,7 @@ namespace Network
 
 		public void OnConnect(int code)
 		{
+			Debug.Log("connect success");
 			this.connectCallback.Invoke(this, code);
 		}
 		

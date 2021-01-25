@@ -9,10 +9,10 @@ namespace Network
 {
 	public static class KcpProtocalType
 	{
-		public const byte SYN = 1;
-		public const byte ACK = 2;
-		public const byte FIN = 3;
-		public const byte MSG = 4;
+		public const short SYN = 101;
+		public const short ACK = 102;
+		public const short FIN = 103;
+		public const short MSG = 104;
 	}
 
 	public sealed class KService : AService

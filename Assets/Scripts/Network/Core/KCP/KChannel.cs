@@ -465,34 +465,9 @@ namespace Network
 			kcp.WndSize(32, 32);
 			kcp.SetMTU(470);
 
-			this.isConnected = true;
 			this.lastRecvTime = this.GetService().TimeNow;
 			
 			Connect();
-		}
-
-		public void Accept()
-		{
-			if (this.socket == null)
-			{
-				return;
-			}
-			
-			uint timeNow = this.GetService().TimeNow;
-
-			try
-			{
-				byte[] buffer = this.memoryStream.GetBuffer();
-				buffer.WriteTo(0, KcpProtocalType.ACK);
-				buffer.WriteTo(1, LocalConn);
-				buffer.WriteTo(5, RemoteConn);
-				this.socket.SendTo(buffer, 0, 9, SocketFlags.None, remoteEndPoint);
-			}
-			catch (Exception e)
-			{
-				Debug.LogError(e);
-				this.OnError(ErrorCode.ERR_SocketCantSend);
-			}
 		}
 
 		/// <summary>
@@ -507,9 +482,10 @@ namespace Network
 				this.lastRecvTime = timeNow;
 				
 				byte[] buffer = this.memoryStream.GetBuffer();
-				buffer.WriteTo(0, KcpProtocalType.SYN);
-				buffer.WriteTo(1, this.LocalConn);
-				this.socket.SendTo(buffer, 0, 5, SocketFlags.None, remoteEndPoint);
+				buffer.WriteTo(0, 4);
+				buffer.WriteTo(4, KcpProtocalType.SYN);
+				Send(buffer,0,6);
+				HandleSend();
 			}
 			catch (Exception e)
 			{
@@ -530,11 +506,10 @@ namespace Network
 			try
 			{
 				byte[] buffer = this.memoryStream.GetBuffer();
-				buffer.WriteTo(0, KcpProtocalType.FIN);
-				buffer.WriteTo(1, this.LocalConn);
-				buffer.WriteTo(5, this.RemoteConn);
-				buffer.WriteTo(9, (uint)this.Error);
-				this.socket.SendTo(buffer, 0, 13, SocketFlags.None, remoteEndPoint);
+				buffer.WriteTo(0, 4);
+				buffer.WriteTo(4, KcpProtocalType.FIN);
+				Send(buffer,0,6);
+				HandleSend();
 			}
 			catch (Exception e)
 			{
@@ -597,8 +572,6 @@ namespace Network
 
 		public void HandleRecv(byte[] date, int offset, int length)
 		{
-			this.isConnected = true;
-			
 			kcp.Input(date, offset, length);
 
 			while (true)
@@ -629,7 +602,16 @@ namespace Network
 
 				this.lastRecvTime = this.GetService().TimeNow;
 
-				this.OnRead(this.memoryStream);
+				if (!isConnected)
+				{
+					this.isConnected = true;
+					OnConnect((int)SocketError.Success);
+				}
+				else
+				{
+					this.OnRead(this.memoryStream);
+				}
+				
 			}
 		}
 

@@ -37,10 +37,16 @@ ET框架中网络有自己的封装，包括了server和client。理解起来稍
 [xtaci/kcp-go](https://github.com/xtaci/kcp-go)
 
 注意事项：
+
 go版本的kcp的demo：echo.go中默认使用了加密模式
+
 kcp.ListenWithOptions("127.0.0.1:12345", block, 10, 3)
 
+
 这种情况下回合C#端的kcp对接不上。造成死活连接不上的问题
+
 解决方法：
+
 1.改成kcp.ListenWithOptions("127.0.0.1:3656", nil, 0, 0)
+
 2.改成kcp.Listen("127.0.0.1:3656")

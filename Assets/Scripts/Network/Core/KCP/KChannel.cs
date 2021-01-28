@@ -525,12 +525,12 @@ namespace Network
 			// 如果还没连接上，发送连接请求
 			if (!this.isConnected)
 			{
-//				// 10秒没连接上则报错
-//				if (timeNow - this.createTime > 10 * 1000)
-//				{
-//					this.OnError(ErrorCode.ERR_KcpCantConnect);
-//					return;
-//				}
+				// 10秒没连接上则报错
+				if (timeNow - this.createTime > 10 * 1000)
+				{
+					this.OnError(ErrorCode.ERR_KcpCantConnect);
+					return;
+				}
 //				
 //				if (timeNow - this.lastRecvTime < 500)
 //				{

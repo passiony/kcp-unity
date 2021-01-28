@@ -48,7 +48,7 @@ namespace Network
 		
 		private void OnError(AChannel channel, int code)
 		{
-			if (Network.OnConnect != null)
+			if (Network.OnError != null)
 			{
 				Network.OnError.Invoke(code);
 			}

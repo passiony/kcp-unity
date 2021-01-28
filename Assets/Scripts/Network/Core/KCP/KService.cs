@@ -19,10 +19,9 @@ namespace Network
 	{
 		public static KService Instance { get; private set; }
 
-		private uint IdGenerater = 1000;
-
 		// KService创建的时间
-		public long StartTime;
+		public long StartTime{ get; private set; }
+		
 		// 当前时间 - KService创建的时间
 		public uint TimeNow { get; private set; }
 
@@ -32,7 +31,7 @@ namespace Network
 		
 		private readonly byte[] cache = new byte[8192];
 
-		public RecyclableMemoryStreamManager MemoryStreamManager = new RecyclableMemoryStreamManager();
+		public readonly RecyclableMemoryStreamManager MemoryStreamManager = new RecyclableMemoryStreamManager();
 
 		private EndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, 0);
 
@@ -137,6 +136,11 @@ namespace Network
 
 		public override void Update()
 		{
+			if (Instance == null)
+			{
+				return;
+			}
+			
 			this.TimeNow = (uint) (TimeHelper.ClientNow() - this.StartTime);
 
 			this.Recv();

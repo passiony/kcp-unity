@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace Network
 {
-	public class ClientManager : MonoSingleton<ClientManager>
+	public class ClientManager : MonoSingleton<ClientManager>,INetworkManager
 	{
 		public AService Service { get; private set; }
 		public Session Session { get; private set; }
@@ -14,7 +14,7 @@ namespace Network
 
 		public Action<int> OnConnect{ get; set; }
 		public Action<int> OnError{ get; set; }
-		public Action<byte[]> ReceiveBytesHandle{ get; set; }
+		public Action<byte[]> OnMessage{ get; set; }
 				
 		
 		public override void Init()
@@ -46,7 +46,7 @@ namespace Network
 		{
 			AChannel channel = this.Service.ConnectChannel(ipEndPoint);
 			Session = new Session(channel);
-			Session.Start();
+			Session.Start(this);
 		}
 
 		/// <summary>
@@ -56,7 +56,7 @@ namespace Network
 		{
 			AChannel channel = this.Service.ConnectChannel(address);
 			Session = new Session(channel);
-			Session.Start();
+			Session.Start(this);
 		}
 
 		public void Update()

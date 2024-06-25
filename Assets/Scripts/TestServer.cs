@@ -22,6 +22,13 @@ public class TestServer : MonoBehaviour
         client.Connect(address);
         client.OnConnect += OnConnect;
         client.OnError += OnError;
+        client.OnMessage += OnMessage;
+    }
+
+    private void OnMessage(byte[] obj)
+    {
+        var msg = Encoding.UTF8.GetString(obj);
+        Debug.Log(msg);
     }
 
     private void OnError(int e)

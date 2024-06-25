@@ -76,6 +76,7 @@ namespace Network
             get { return this.channel.ChannelType; }
         }
 
+
         public MemoryStream Stream
         {
             get { return this.channel.Stream; }

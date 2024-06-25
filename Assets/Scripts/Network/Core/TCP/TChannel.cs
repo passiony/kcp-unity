@@ -67,13 +67,7 @@ namespace Network
 			return (TService)this.Service;
 		}
 
-		public override MemoryStream Stream
-		{
-			get
-			{
-				return this.memoryStream;
-			}
-		}
+		public override MemoryStream Stream=>this.memoryStream;
 
 		public override void Start()
 		{

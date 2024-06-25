@@ -68,8 +68,6 @@ namespace Network
 
 		public void Send(byte[] data)
 		{
-			Debug.Log("send message：" + data);
-
 			Session.Send(data);
 		}
 		

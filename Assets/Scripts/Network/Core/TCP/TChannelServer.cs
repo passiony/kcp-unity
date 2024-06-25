@@ -63,9 +63,9 @@ namespace Network
 			this.memoryStream.Dispose();
 		}
 		
-		private TService GetService()
+		private TServiceServer GetService()
 		{
-			return (TService)this.Service;
+			return (TServiceServer)this.Service;
 		}
 
 		public override MemoryStream Stream

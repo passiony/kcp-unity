@@ -39,6 +39,7 @@ public class TestServer : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             var msg = "你好,我是Server";
+            Debug.Log("Send:" + msg);
             var data = Encoding.UTF8.GetBytes(msg);
             ServerManager.Instance.Send(data);
             starttime = GetTimeStamp();

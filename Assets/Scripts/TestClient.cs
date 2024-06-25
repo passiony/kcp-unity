@@ -39,6 +39,8 @@ public class TestClient : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             var msg = "你好，我是客户端";
+            Debug.Log("Send:" + msg);
+
             var data = Encoding.UTF8.GetBytes(msg);
             ClientManager.Instance.Send(data);
             starttime = GetTimeStamp();

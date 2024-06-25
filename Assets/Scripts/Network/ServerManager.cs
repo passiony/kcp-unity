@@ -8,7 +8,7 @@ namespace Network
 	public class ServerManager : MonoSingleton<ServerManager>
 	{
 		public AService Service { get; private set; }
-		public Session Session { get; private set; }
+		public SessionServer Session { get; private set; }
 		
 		public IMessagePacker MessagePacker { get; set; }
 		public IMessageDispatcher MessageDispatcher { get; set; }
@@ -40,7 +40,7 @@ namespace Network
 		public void Connect(IPEndPoint ipEndPoint)
 		{
 			AChannel channel = this.Service.ConnectChannel(ipEndPoint);
-			Session = new Session(channel);
+			Session = new SessionServer(channel);
 			Session.Start();
 		}
 
@@ -50,7 +50,7 @@ namespace Network
 		public void Connect(string address)
 		{
 			AChannel channel = this.Service.ConnectChannel(address);
-			Session = new Session(channel);
+			Session = new SessionServer(channel);
 			Session.Start();
 		}
 

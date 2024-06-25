@@ -11,7 +11,6 @@ namespace Network
 	public sealed class TService : AService
 	{
 		private readonly SocketAsyncEventArgs innArgs = new SocketAsyncEventArgs();
-		private Socket acceptor;
 		private TChannel channel;
 
 		public RecyclableMemoryStreamManager MemoryStreamManager = new RecyclableMemoryStreamManager();
@@ -26,8 +25,6 @@ namespace Network
 		public override void Dispose()
 		{
 			this.channel.Dispose();
-			this.acceptor?.Close();
-			this.acceptor = null;
 			this.innArgs.Dispose();
 		}
 		

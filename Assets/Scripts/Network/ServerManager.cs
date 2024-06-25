@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading;
 using  UnityEngine;
@@ -68,11 +66,11 @@ namespace Network
 			this.Service.Update();
 		}
 
-		public void Send(ushort opcode)
+		public void Send(byte[] data)
 		{
-			Debug.Log("send message：" + opcode);
+			Debug.Log("send message：" + data);
 
-			Session.Send(opcode);
+			Session.Send(data);
 		}
 		
 		public void Dispose()

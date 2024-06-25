@@ -40,7 +40,7 @@ public class TestServer : MonoBehaviour
         {
             var msg = "你好,我是Server";
             var data = Encoding.UTF8.GetBytes(msg);
-            ClientManager.Instance.Send(data);
+            ServerManager.Instance.Send(data);
             starttime = GetTimeStamp();
         }
     }

@@ -7,7 +7,7 @@ using  UnityEngine;
 
 namespace Network
 {
-	public class NetworkManager : MonoSingleton<NetworkManager>
+	public class ServerManager : MonoSingleton<ServerManager>
 	{
 		public AService Service { get; private set; }
 		public Session Session { get; private set; }
@@ -30,14 +30,8 @@ namespace Network
 		{
 			switch (protocol)
 			{
-				case NetworkProtocol.KCP:
-					this.Service = new KService() { };
-					break;
 				case NetworkProtocol.TCP:
-					this.Service = new TService(packetSize) { };
-					break;
-				case NetworkProtocol.WebSocket:
-					this.Service = new WService() { };
+					this.Service = new TServiceServer(packetSize) { };
 					break;
 			}
 		}

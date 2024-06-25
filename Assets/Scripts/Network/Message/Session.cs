@@ -11,9 +11,9 @@ namespace Network
 		
 		private readonly byte[] opcodeBytes = new byte[2];
 
-		public NetworkManager Network
+		public ClientManager Client
 		{
-			get { return NetworkManager.Instance; }
+			get { return ClientManager.Instance; }
 		}
 
 		public int Error
@@ -39,18 +39,18 @@ namespace Network
 		
 		private void OnConnect(AChannel channel, int code)
 		{
-			if (Network.OnConnect != null)
+			if (Client.OnConnect != null)
 			{
-				Network.OnConnect.Invoke(0);
+				Client.OnConnect.Invoke(0);
 			}
 			Debug.Log("OnConnect" + code);
 		}
 		
 		private void OnError(AChannel channel, int code)
 		{
-			if (Network.OnError != null)
+			if (Client.OnError != null)
 			{
-				Network.OnError.Invoke(code);
+				Client.OnError.Invoke(code);
 			}
 			Debug.LogError("OnError:" + code);
 			this.Dispose();
@@ -99,8 +99,8 @@ namespace Network
 		private void Run(MemoryStream memoryStream)
 		{
 			memoryStream.Seek(0, SeekOrigin.Begin);
-			Network.MessageDispatcher.Dispatch(this, memoryStream.GetBuffer());
-			Network.ReceiveBytesHandle?.Invoke(memoryStream.GetBuffer());
+			Client.MessageDispatcher.Dispatch(this, memoryStream.GetBuffer());
+			Client.ReceiveBytesHandle?.Invoke(memoryStream.GetBuffer());
 		}
 		
 		public void OnRead(MemoryStream memoryStream)

@@ -9,7 +9,7 @@ namespace Network
 		{
 			ushort opcode = BitConverter.ToUInt16(buffer, Packet.OpcodeIndex);
 //			object message = this.Network.MessagePacker.DeserializeFrom(null, memoryStream);
-			Test01.Receive();
+			TestClient.Receive();
 			Debug.Log("receive msg：" + opcode);
 		}
 	}

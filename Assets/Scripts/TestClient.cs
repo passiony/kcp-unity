@@ -4,23 +4,23 @@ using System.Collections.Generic;
 using Network;
 using UnityEngine;
 
-public class Test01 : MonoBehaviour
+public class TestClient : MonoBehaviour
 {
-    private string address = "127.0.0.1:12346";
+    public string address = "127.0.0.1:12346";
 //    private string address = "10.200.10.192:3655";
 
     public static long starttime = 0;
 
     void Start()
     {
-        NetworkManager network = NetworkManager.Instance;
-        network.InitService(NetworkProtocol.KCP);
-        network.MessagePacker = new ProtobufPacker();
-        network.MessageDispatcher = new OuterMessageDispatcher();
+        ClientManager client = ClientManager.Instance;
+        client.InitService(NetworkProtocol.KCP);
+        client.MessagePacker = new ProtobufPacker();
+        client.MessageDispatcher = new OuterMessageDispatcher();
 
-        network.Connect(address);
-        network.OnConnect += OnConnect;
-        network.OnError += OnError;
+        client.Connect(address);
+        client.OnConnect += OnConnect;
+        client.OnError += OnError;
     }
 
     private void OnError(int e)
@@ -37,7 +37,7 @@ public class Test01 : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            NetworkManager.Instance.Send(2201);
+            ClientManager.Instance.Send(2201);
             starttime = GetTimeStamp();
         }
     }

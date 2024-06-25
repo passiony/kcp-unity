@@ -74,11 +74,9 @@ namespace Network
 			this.Service.Update();
 		}
 
-		public void Send(ushort opcode)
+		public void Send(byte[] data)
 		{
-			Debug.Log("send message：" + opcode);
-
-			Session.Send(opcode);
+			Session.Send(data);
 		}
 		
 		public void Dispose()

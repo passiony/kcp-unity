@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using Network;
 using UnityEngine;
 
@@ -37,7 +38,9 @@ public class TestServer : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            ClientManager.Instance.Send(2201);
+            var msg = "你好,我是Server";
+            var data = Encoding.UTF8.GetBytes(msg);
+            ClientManager.Instance.Send(data);
             starttime = GetTimeStamp();
         }
     }

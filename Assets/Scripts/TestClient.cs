@@ -15,7 +15,7 @@ public class TestClient : MonoBehaviour
     void Start()
     {
         ClientManager client = ClientManager.Instance;
-        client.InitService(NetworkProtocol.KCP);
+        client.InitService(NetworkProtocol.TCP);
         client.MessagePacker = new ProtobufPacker();
         client.MessageDispatcher = new OuterMessageDispatcher();
 

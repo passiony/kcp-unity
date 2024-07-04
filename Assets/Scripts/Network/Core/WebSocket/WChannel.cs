@@ -58,14 +58,6 @@ namespace Network
             this.memoryStream.Dispose();
         }
 
-        public override MemoryStream Stream
-        {
-            get
-            {
-                return this.memoryStream;
-            }
-        }
-
         public override void Start()
         {
             if (!this.isConnected)

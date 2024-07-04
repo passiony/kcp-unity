@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using Microsoft.IO;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Network
 {
@@ -18,9 +16,6 @@ namespace Network
         private List<TClientConnection> clientConnections = new List<TClientConnection>();
         private SocketAsyncEventArgs acceptArgs = new SocketAsyncEventArgs();
 
-        private readonly MemoryStream memoryStream;
-        public override MemoryStream Stream => this.memoryStream;
-
         private readonly PacketParser parser;
 
         private readonly TServiceServer service;
@@ -29,10 +24,9 @@ namespace Network
 
         private bool isRecving;
 
-        public TChannelServer(IPEndPoint ipEndPoint, TServiceServer service) : base(service, ChannelType.Connect)
+        public TChannelServer(IPEndPoint ipEndPoint, TServiceServer service) : base(service, ChannelType.Accept)
         {
             this.service = service;
-            int packetSize = service.PacketSizeLength;
             this.memoryStream = service.MemoryStreamManager.GetStream("server", ushort.MaxValue);
 
             this.listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -103,7 +97,7 @@ namespace Network
             clientConnections.Add(clientConnection);
 
             clientConnection.Start();
-            clientConnection.OnDispose.AddListener(OnDisconnect);
+            clientConnection.OnDisposeCallback=OnDisconnect;
             // Start accepting next client
             this.AcceptAsync();
         }

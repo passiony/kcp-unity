@@ -29,11 +29,11 @@ namespace Network
 		private readonly PacketParser parser;
 
 		private readonly byte[] packetSizeCache;
-		
-		public override MemoryStream Stream=>this.memoryStream;
+ 
 
 		public TChannel(IPEndPoint ipEndPoint, TService service): base(service, ChannelType.Connect)
 		{
+			
 			int packetSize = service.PacketSizeLength;
 			this.packetSizeCache = new byte[packetSize];
 			this.memoryStream = service.MemoryStreamManager.GetStream("message", ushort.MaxValue);

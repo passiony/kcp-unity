@@ -432,14 +432,6 @@ namespace Network
 			this.memoryStream.Dispose();
 		}
 
-		public override MemoryStream Stream
-		{
-			get
-			{
-				return this.memoryStream;
-			}
-		}
-
 		public void Disconnect(int error)
 		{
 			this.OnError(error);

@@ -10,9 +10,9 @@ namespace Network
     /// <summary>
     /// 管理客户端连接的类
     /// </summary>
-    public sealed class TClientConnection : IDisposable
+    public sealed class TClientConnection : AChannel
     {
-        private int PacketSizeLength = Packet.PacketSizeLength4;
+        private int PacketSizeLength;
 
         private readonly Socket clientSocket;
         private readonly SocketAsyncEventArgs innArgs = new SocketAsyncEventArgs();
@@ -29,15 +29,18 @@ namespace Network
         private bool isSending;
         private bool isRecving;
 
-        public MemoryStream Stream => this.memoryStream;
-        public UnityEvent<TClientConnection> OnDispose;
+        private readonly SessionConnector session;
+        public UnityAction<TClientConnection> OnDisposeCallback;
 
-        public TClientConnection(Socket clientSocket, TServiceServer service)
+        public TClientConnection(Socket clientSocket, TServiceServer service) : base(service, ChannelType.Connect)
         {
+            this.session = new SessionConnector(this);
+
             this.clientSocket = clientSocket;
             this.memoryStream = service.MemoryStreamManager.GetStream("client", ushort.MaxValue);
 
             int packetSize = service.PacketSizeLength;
+            this.PacketSizeLength = packetSize;
             this.packetSizeCache = new byte[packetSize];
             this.parser = new PacketParser(packetSize, this.recvBuffer, this.memoryStream);
 
@@ -48,7 +51,7 @@ namespace Network
 
         public void Dispose()
         {
-            OnDispose?.Invoke(this);
+            OnDisposeCallback?.Invoke(this);
             this.clientSocket.Close();
             this.innArgs.Dispose();
             this.outArgs.Dispose();
@@ -295,16 +298,6 @@ namespace Network
             Debug.LogError($"Socket error: {error}");
             this.Dispose();
         }
-
-        private void OnRead(MemoryStream stream)
-        {
-            // 处理收到的消息
-            stream.Seek(0, SeekOrigin.Begin);
-            var bytes = new byte[stream.Length];
-            stream.Read(bytes, 0, bytes.Length);
-            OnMessage(bytes);
-        }
-
 
         private void OnMessage(byte[] obj)
         {

@@ -84,8 +84,11 @@ namespace Network
         private void Run(MemoryStream memoryStream)
         {
             memoryStream.Seek(0, SeekOrigin.Begin);
+            var bytes = new byte[memoryStream.Length];
+            memoryStream.Read(bytes, 0, bytes.Length);
+            
             // Manager.MessageDispatcher.Dispatch(this, memoryStream.GetBuffer());
-            Manager.OnMessage?.Invoke(memoryStream.GetBuffer());
+            Manager.OnMessage?.Invoke(bytes);
         }
 
         public void OnRead(MemoryStream memoryStream)

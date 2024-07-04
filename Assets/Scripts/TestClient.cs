@@ -8,8 +8,9 @@ using UnityEngine;
 public class TestClient : MonoBehaviour
 {
     public string address = "127.0.0.1:12346";
-//    private string address = "10.200.10.192:3655";
 
+//    private string address = "10.200.10.192:3655";
+    public string sendMessage = "client";
     public static long starttime = 0;
 
     void Start()
@@ -28,7 +29,7 @@ public class TestClient : MonoBehaviour
     private void OnMessage(byte[] obj)
     {
         var msg = Encoding.UTF8.GetString(obj);
-        Debug.Log(msg);
+        Debug.Log($"Receive{obj.Length}" + msg);
     }
 
     private void OnError(int e)
@@ -45,10 +46,9 @@ public class TestClient : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            var msg = "你好，我是客户端";
-            Debug.Log("Send:" + msg);
+            var data = Encoding.UTF8.GetBytes(sendMessage);
+            Debug.Log($"Send{data.Length}:" + sendMessage);
 
-            var data = Encoding.UTF8.GetBytes(msg);
             ClientManager.Instance.Send(data);
             starttime = GetTimeStamp();
         }

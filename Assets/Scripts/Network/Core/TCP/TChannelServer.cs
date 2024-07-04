@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using Microsoft.IO;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Network
 {
@@ -87,9 +88,14 @@ namespace Network
             clientConnections.Add(clientConnection);
 
             clientConnection.Start();
-
+            clientConnection.OnDispose.AddListener(OnDisconnect);
             // Start accepting next client
             this.AcceptAsync();
+        }
+
+        public void OnDisconnect(TClientConnection connection)
+        {
+            clientConnections.Remove(connection);
         }
     }
 }

@@ -5,6 +5,7 @@ using System.IO;
 using System.Net.Sockets;
 using Microsoft.IO;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Network
 {
@@ -29,6 +30,8 @@ namespace Network
         private bool isSending;
         private bool isRecving;
 
+        public UnityEvent<TClientConnection> OnDispose;
+
         public TClientConnection(Socket clientSocket, TServiceServer service)
         {
             this.clientSocket = clientSocket;
@@ -44,6 +47,7 @@ namespace Network
 
         public void Dispose()
         {
+            OnDispose?.Invoke(this);
             this.clientSocket.Close();
             this.innArgs.Dispose();
             this.outArgs.Dispose();

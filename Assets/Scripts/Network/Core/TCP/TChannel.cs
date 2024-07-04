@@ -33,6 +33,8 @@ namespace Network
 
 		private readonly byte[] packetSizeCache;
 		
+		public override MemoryStream Stream=>this.memoryStream;
+
 		public TChannel(IPEndPoint ipEndPoint, TService service): base(service, ChannelType.Connect)
 		{
 			int packetSize = service.PacketSizeLength;
@@ -66,8 +68,6 @@ namespace Network
 		{
 			return (TService)this.Service;
 		}
-
-		public override MemoryStream Stream=>this.memoryStream;
 
 		public override void Start()
 		{

@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using System.Net.Sockets;
+using System.Text;
 using Microsoft.IO;
 using UnityEngine;
 using UnityEngine.Events;
@@ -27,15 +28,17 @@ namespace Network
         private readonly PacketParser parser;
         private readonly byte[] packetSizeCache;
 
+        private bool isConnected;
         private bool isSending;
         private bool isRecving;
 
+        public MemoryStream Stream=>this.memoryStream;
         public UnityEvent<TClientConnection> OnDispose;
 
         public TClientConnection(Socket clientSocket, TServiceServer service)
         {
             this.clientSocket = clientSocket;
-            this.memoryStream = service.MemoryStreamManager.GetStream("message", ushort.MaxValue);
+            this.memoryStream = service.MemoryStreamManager.GetStream("client", ushort.MaxValue);
 
             int packetSize = service.PacketSizeLength;
             this.packetSizeCache = new byte[packetSize];
@@ -43,6 +46,7 @@ namespace Network
 
             this.innArgs.Completed += this.OnComplete;
             this.outArgs.Completed += this.OnComplete;
+            isConnected = false;
         }
 
         public void Dispose()
@@ -60,9 +64,27 @@ namespace Network
             {
                 this.isRecving = true;
                 this.StartRecv();
+                this.isConnected = true;
             }
         }
 
+        public void Update()
+        {
+            if (isSending)
+            {
+                return;
+            }
+			
+            try
+            {
+                StartSend();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+        }
+        
         private void OnComplete(object sender, SocketAsyncEventArgs e)
         {
             switch (e.LastOperation)
@@ -188,12 +210,21 @@ namespace Network
 
             this.sendBuffer.Write(this.packetSizeCache, 0, this.packetSizeCache.Length);
             this.sendBuffer.Write(stream);
-
-            this.StartSend();
         }
 
         public void StartSend()
         {
+            if(!this.isConnected)
+            {
+                return;
+            }
+			
+            // 没有数据需要发送
+            if (this.sendBuffer.Length == 0)
+            {
+                this.isSending = false;
+                return;
+            }
             if (!this.isSending)
             {
                 this.isSending = true;
@@ -260,6 +291,9 @@ namespace Network
         private void OnRead(MemoryStream packet)
         {
             // 处理收到的消息
+            var msg = Encoding.UTF8.GetString(packet.GetBuffer());
+            Debug.Log(msg);
         }
+
     }
 }

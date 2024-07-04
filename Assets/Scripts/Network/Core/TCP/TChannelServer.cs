@@ -19,26 +19,40 @@ namespace Network
         private SocketAsyncEventArgs acceptArgs = new SocketAsyncEventArgs();
 
         private readonly MemoryStream memoryStream;
-        public override MemoryStream Stream=>this.memoryStream;
+        public override MemoryStream Stream => this.memoryStream;
 
         private readonly PacketParser parser;
 
         private readonly TServiceServer service;
+		
+        private bool isSending;
+
+        private bool isRecving;
+        
+        public bool IsSending => this.isSending;
         
         public TChannelServer(IPEndPoint ipEndPoint, TServiceServer service) : base(service, ChannelType.Connect)
         {
             this.service = service;
             int packetSize = service.PacketSizeLength;
             this.memoryStream = service.MemoryStreamManager.GetStream("server", ushort.MaxValue);
-            
+
             this.listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             listener.Bind(ipEndPoint);
             listener.Listen(10); // 最大挂起连接队列的长度
             this.listener.NoDelay = true;
-
+            Debug.Log("开启监听：" + ipEndPoint);
             this.acceptArgs.Completed += this.OnAcceptComplete;
         }
 
+        public void Update()
+        {
+            foreach (var connection in clientConnections)
+            {
+                connection.Update();
+            }
+        }
+        
         public override void Send(MemoryStream stream)
         {
             foreach (var connection in clientConnections)
@@ -54,6 +68,7 @@ namespace Network
             {
                 clientConnection.Dispose();
             }
+
             this.acceptArgs.Dispose();
             this.listener = null;
         }
@@ -82,6 +97,7 @@ namespace Network
                 return;
             }
 
+            Debug.Log("客户端连接成功：" + e.RemoteEndPoint);
             Socket clientSocket = e.AcceptSocket;
 
             TClientConnection clientConnection = new TClientConnection(clientSocket, this.service);
@@ -97,5 +113,6 @@ namespace Network
         {
             clientConnections.Remove(connection);
         }
+        
     }
 }

@@ -16,10 +16,6 @@ namespace Network
 		public RecyclableMemoryStreamManager MemoryStreamManager = new RecyclableMemoryStreamManager();
 		
 		public int PacketSizeLength { get; }
-		
-		private bool isSending;
-
-		private bool isRecving;
 
 		public TServiceServer(int packetSizeLength)
 		{
@@ -48,22 +44,16 @@ namespace Network
 			IPEndPoint ipEndPoint = NetworkHelper.ToIPEndPoint(address);
 			return this.ConnectChannel(ipEndPoint);
 		}
-		public bool IsSending => this.isSending;
 		public override void Update()
 		{
-			// if (channel.IsSending)
-			// {
-			// 	return;
-			// }
-			//
-			// try
-			// {
-			// 	channel.StartSend();
-			// }
-			// catch (Exception e)
-			// {
-			// 	Debug.LogError(e);
-			// }
+			try
+			{
+				channel.Update();
+			}
+			catch (Exception e)
+			{
+				Debug.LogError(e);
+			}
 		}
 	}
 }

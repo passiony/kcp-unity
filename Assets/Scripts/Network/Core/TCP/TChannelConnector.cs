@@ -1,10 +1,7 @@
-﻿// TClientConnection.cs
-
-using System;
+﻿using System;
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
-using Microsoft.IO;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -32,7 +29,7 @@ namespace Network
         private bool isSending;
         private bool isRecving;
 
-        public MemoryStream Stream=>this.memoryStream;
+        public MemoryStream Stream => this.memoryStream;
         public UnityEvent<TClientConnection> OnDispose;
 
         public TClientConnection(Socket clientSocket, TServiceServer service)
@@ -74,7 +71,7 @@ namespace Network
             {
                 return;
             }
-			
+
             try
             {
                 StartSend();
@@ -84,7 +81,7 @@ namespace Network
                 Debug.LogError(e);
             }
         }
-        
+
         private void OnComplete(object sender, SocketAsyncEventArgs e)
         {
             switch (e.LastOperation)
@@ -130,11 +127,17 @@ namespace Network
             {
                 return;
             }
+
             OnRecvComplete(this.innArgs);
         }
 
         private void OnRecvComplete(object o)
         {
+            if (this.clientSocket == null)
+            {
+                return;
+            }
+
             SocketAsyncEventArgs e = (SocketAsyncEventArgs)o;
 
             if (e.SocketError != SocketError.Success)
@@ -195,6 +198,7 @@ namespace Network
                     {
                         throw new Exception($"send packet too large: {stream.Length}");
                     }
+
                     this.packetSizeCache.WriteTo(0, (int)stream.Length);
                     break;
                 case Packet.PacketSizeLength2:
@@ -202,6 +206,7 @@ namespace Network
                     {
                         throw new Exception($"send packet too large: {stream.Length}");
                     }
+
                     this.packetSizeCache.WriteTo(0, (ushort)stream.Length);
                     break;
                 default:
@@ -214,17 +219,18 @@ namespace Network
 
         public void StartSend()
         {
-            if(!this.isConnected)
+            if (!this.isConnected)
             {
                 return;
             }
-			
+
             // 没有数据需要发送
             if (this.sendBuffer.Length == 0)
             {
                 this.isSending = false;
                 return;
             }
+
             if (!this.isSending)
             {
                 this.isSending = true;
@@ -249,10 +255,12 @@ namespace Network
             {
                 throw new Exception($"socket set buffer error: {buffer.Length}, {offset}, {count}", e);
             }
+
             if (this.clientSocket.SendAsync(this.outArgs))
             {
                 return;
             }
+
             OnSendComplete(this.outArgs);
         }
 
@@ -288,12 +296,20 @@ namespace Network
             this.Dispose();
         }
 
-        private void OnRead(MemoryStream packet)
+        private void OnRead(MemoryStream stream)
         {
             // 处理收到的消息
-            var msg = Encoding.UTF8.GetString(packet.GetBuffer());
-            Debug.Log(msg);
+            stream.Seek(0, SeekOrigin.Begin);
+            var bytes = new byte[stream.Length];
+            stream.Read(bytes, 0, bytes.Length);
+            OnMessage(bytes);
         }
 
+
+        private void OnMessage(byte[] obj)
+        {
+            var msg = Encoding.UTF8.GetString(obj);
+            Debug.Log($"Receive{obj.Length}" + msg);
+        }
     }
 }

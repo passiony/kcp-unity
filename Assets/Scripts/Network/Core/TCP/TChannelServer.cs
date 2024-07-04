@@ -10,7 +10,7 @@ using UnityEngine.Events;
 namespace Network
 {
     /// <summary>
-    /// 封装Socket,将回调push到主线程处理
+    /// 封装 Server 端Socket监听
     /// </summary>
     public sealed class TChannelServer : AChannel
     {
@@ -28,9 +28,7 @@ namespace Network
         private bool isSending;
 
         private bool isRecving;
-        
-        public bool IsSending => this.isSending;
-        
+
         public TChannelServer(IPEndPoint ipEndPoint, TServiceServer service) : base(service, ChannelType.Connect)
         {
             this.service = service;
@@ -41,6 +39,7 @@ namespace Network
             listener.Bind(ipEndPoint);
             listener.Listen(10); // 最大挂起连接队列的长度
             this.listener.NoDelay = true;
+            
             Debug.Log("开启监听：" + ipEndPoint);
             this.acceptArgs.Completed += this.OnAcceptComplete;
         }

@@ -5,6 +5,9 @@ using  UnityEngine;
 
 namespace Network
 {
+	/// <summary>
+	/// Server 服务器的 业务逻辑 管理器
+	/// </summary>
 	public class ServerManager : MonoSingleton<ServerManager>, INetworkManager
 	{
 		public AService Service { get; private set; }

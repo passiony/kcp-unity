@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using Microsoft.IO;
@@ -8,9 +6,11 @@ using UnityEngine;
 
 namespace Network
 {
+	/// <summary>
+	/// TChannle的一个封装管理
+	/// </summary>
 	public sealed class TService : AService
 	{
-		private readonly SocketAsyncEventArgs innArgs = new SocketAsyncEventArgs();
 		private TChannel channel;
 
 		public RecyclableMemoryStreamManager MemoryStreamManager = new RecyclableMemoryStreamManager();
@@ -25,7 +25,6 @@ namespace Network
 		public override void Dispose()
 		{
 			this.channel.Dispose();
-			this.innArgs.Dispose();
 		}
 		
 		public override AChannel GetChannel()

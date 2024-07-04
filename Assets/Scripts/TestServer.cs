@@ -9,6 +9,7 @@ public class TestServer : MonoBehaviour
 {
     public string address = "127.0.0.1:12346";
 //    private string address = "10.200.10.192:3655";
+    public string sendMessage = "server";
 
     public static long starttime = 0;
 
@@ -45,9 +46,9 @@ public class TestServer : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            var msg = "你好,我是Server";
-            Debug.Log("Send:" + msg);
-            var data = Encoding.UTF8.GetBytes(msg);
+            var data = Encoding.UTF8.GetBytes(sendMessage);
+            Debug.Log($"Send{data.Length}:" + sendMessage);
+            
             ServerManager.Instance.Send(data);
             starttime = GetTimeStamp();
         }

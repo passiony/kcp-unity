@@ -4,6 +4,9 @@ using System.Threading;
 
 namespace Network
 {
+	/// <summary>
+	/// 客户端的 业务逻辑 管理类
+	/// </summary>
 	public class ClientManager : MonoSingleton<ClientManager>,INetworkManager
 	{
 		public AService Service { get; private set; }

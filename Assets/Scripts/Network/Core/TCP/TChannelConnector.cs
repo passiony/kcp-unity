@@ -21,7 +21,6 @@ namespace Network
         private readonly CircularBuffer recvBuffer = new CircularBuffer();
         private readonly CircularBuffer sendBuffer = new CircularBuffer();
 
-        private readonly MemoryStream memoryStream;
         private readonly PacketParser parser;
         private readonly byte[] packetSizeCache;
 
@@ -49,7 +48,7 @@ namespace Network
             isConnected = false;
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             OnDisposeCallback?.Invoke(this);
             this.clientSocket.Close();
@@ -58,7 +57,7 @@ namespace Network
             this.memoryStream.Dispose();
         }
 
-        public void Start()
+        public override void Start()
         {
             if (!this.isRecving)
             {
@@ -192,7 +191,7 @@ namespace Network
             this.StartRecv();
         }
 
-        public void Send(MemoryStream stream)
+        public override void Send(MemoryStream stream)
         {
             switch (PacketSizeLength)
             {
@@ -293,7 +292,7 @@ namespace Network
             this.StartSend();
         }
 
-        private void OnError(int error)
+        private new void OnError(int error)
         {
             Debug.LogError($"Socket error: {error}");
             this.Dispose();

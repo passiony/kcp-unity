@@ -18,8 +18,6 @@ namespace Network
 		private readonly CircularBuffer recvBuffer = new CircularBuffer();
 		private readonly CircularBuffer sendBuffer = new CircularBuffer();
 
-		private readonly MemoryStream memoryStream;
-
 		private bool isSending;
 
 		private bool isRecving;
@@ -50,7 +48,7 @@ namespace Network
 			this.isSending = false;
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			this.socket.Close();
 			this.innArgs.Dispose();

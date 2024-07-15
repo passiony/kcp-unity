@@ -389,8 +389,6 @@ namespace Network
 		public uint LocalConn { get; private set; }
 		public uint RemoteConn { get; private set; }
 
-		private readonly MemoryStream memoryStream;
-		
 		// connect
 		public KChannel(uint localConn, Socket socket, IPEndPoint remoteEndPoint, KService kService) : base(kService, ChannelType.Connect)
 		{
@@ -406,7 +404,7 @@ namespace Network
 		}
 
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			try
 			{

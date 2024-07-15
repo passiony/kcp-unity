@@ -74,7 +74,7 @@ namespace Network
 			Session.Send(data);
 		}
 		
-		public void Dispose()
+		public override void Dispose()
 		{
 			Session.Dispose();
 		}

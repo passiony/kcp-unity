@@ -54,7 +54,7 @@ namespace Network
             }
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             this.listener.Close();
             foreach (var clientConnection in this.clientConnections)

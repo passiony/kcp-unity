@@ -81,7 +81,7 @@ namespace Network
         {
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             this.Service.Dispose();
         }

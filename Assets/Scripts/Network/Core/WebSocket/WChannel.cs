@@ -19,8 +19,6 @@ namespace Network
 
         private bool isConnected;
 
-        private readonly MemoryStream memoryStream;
-
         private readonly MemoryStream recvStream;
 
         private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
@@ -47,7 +45,7 @@ namespace Network
             isConnected = false;
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             this.cancellationTokenSource.Cancel();
             this.cancellationTokenSource.Dispose();

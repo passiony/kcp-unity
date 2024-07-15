@@ -6,7 +6,7 @@ using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 
-namespace Network
+namespace UNetwork
 {
     public class KCP
     {

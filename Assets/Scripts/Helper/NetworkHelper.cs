@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace Network
+namespace UNetwork
 {
 	public static class NetworkHelper
 	{

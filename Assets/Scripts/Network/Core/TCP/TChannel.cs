@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
 
-namespace Network
+namespace UNetwork
 {
 	/// <summary>
 	/// 封装Socket,将回调push到主线程处理

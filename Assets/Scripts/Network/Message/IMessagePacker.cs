@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Network
+namespace UNetwork
 {
 	public interface IMessagePacker
 	{

@@ -2,7 +2,7 @@
 using System.Text;
 using UnityEngine;
 
-namespace Network
+namespace UNetwork
 {
 	public class OuterMessageDispatcher: IMessageDispatcher
 	{

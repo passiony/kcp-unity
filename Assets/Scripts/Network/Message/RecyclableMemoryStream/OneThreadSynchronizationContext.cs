@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Threading;
 
-namespace Network
+namespace UNetwork
 {
 	public class OneThreadSynchronizationContext : SynchronizationContext
 	{

@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Network
+namespace UNetwork
 {
 	public static class ByteHelper
 	{

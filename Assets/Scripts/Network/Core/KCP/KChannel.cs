@@ -8,7 +8,7 @@ using UnityEngine;
 	using System.Runtime.InteropServices;
 #endif
 
-namespace Network
+namespace UNetwork
 {
 	public struct WaitSendBuffer
 	{

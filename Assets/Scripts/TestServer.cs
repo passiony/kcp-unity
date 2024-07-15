@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Text;
-using Network;
+using UNetwork;
 using UnityEngine;
 
 public class TestServer : MonoBehaviour
 {
-    public string address = "127.0.0.1:12346";
-//    private string address = "10.200.10.192:3655";
+    public string ip = "127.0.0.1";
+    public int port = 12346;
+    
     public string sendMessage = "server";
-
     public static long starttime = 0;
 
     void Start()
@@ -18,7 +18,7 @@ public class TestServer : MonoBehaviour
         client.MessagePacker = new ProtobufPacker();
         client.MessageDispatcher = new OuterMessageDispatcher();
 
-        client.Connect(address);
+        client.Connect(ip, port);
         client.OnConnect += OnConnect;
         client.OnError += OnError;
         client.OnMessage += OnMessage;
@@ -46,7 +46,7 @@ public class TestServer : MonoBehaviour
         {
             var data = Encoding.UTF8.GetBytes(sendMessage);
             Debug.Log($"Send{data.Length}:" + sendMessage);
-            
+
             ServerManager.Instance.Send(data);
             starttime = GetTimeStamp();
         }

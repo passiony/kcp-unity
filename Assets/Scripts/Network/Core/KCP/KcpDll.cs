@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Network
+namespace UNetwork
 {
     public delegate int KcpOutput(IntPtr buf, int len, IntPtr kcp, IntPtr user);
 
-    public class Kcp
+    public class KcpDll
     {
 #if UNITY_IPHONE && !UNITY_EDITOR
         const string KcpDLL = "__Internal";

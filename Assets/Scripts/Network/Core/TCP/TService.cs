@@ -4,7 +4,7 @@ using System.Net.Sockets;
 using Microsoft.IO;
 using UnityEngine;
 
-namespace Network
+namespace UNetwork
 {
 	/// <summary>
 	/// TChannle的一个封装管理

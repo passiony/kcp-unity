@@ -5,7 +5,7 @@ using System.Net.WebSockets;
 using System.Threading;
 using UnityEngine;
 
-namespace Network
+namespace UNetwork
 {
     public class WChannel: AChannel
     {

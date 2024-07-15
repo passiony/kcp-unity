@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Text;
-using Network;
+using UNetwork;
 using UnityEngine;
 
 public class TestClient : MonoBehaviour
 {
-    public string address = "127.0.0.1:12346";
+    public string ip = "127.0.0.1";
+    public int port = 12346;
 
 //    private string address = "10.200.10.192:3655";
     public string sendMessage = "client";
@@ -20,7 +19,7 @@ public class TestClient : MonoBehaviour
         client.MessagePacker = new ProtobufPacker();
         client.MessageDispatcher = new OuterMessageDispatcher();
 
-        client.Connect(address);
+        client.Connect(ip,port);
         client.OnConnect += OnConnect;
         client.OnError += OnError;
         client.OnMessage += OnMessage;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace Network
+namespace UNetwork
 {
 	public enum NetworkProtocol
 	{

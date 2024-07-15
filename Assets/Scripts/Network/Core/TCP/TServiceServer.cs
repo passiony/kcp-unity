@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using Microsoft.IO;
 using UnityEngine;
 
-namespace Network
+namespace UNetwork
 {
 	public sealed class TServiceServer : AService
 	{

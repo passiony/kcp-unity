@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Network
+namespace UNetwork
 {
 	public static class TimeHelper
 	{

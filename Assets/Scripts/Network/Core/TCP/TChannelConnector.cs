@@ -5,7 +5,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Network
+namespace UNetwork
 {
     /// <summary>
     /// 管理客户端连接的类

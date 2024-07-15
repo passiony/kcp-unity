@@ -1,4 +1,4 @@
-﻿namespace Network
+﻿namespace UNetwork
 {
 	public struct MessageInfo
 	{

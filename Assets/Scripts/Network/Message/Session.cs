@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 using UnityEngine;
 
-namespace Network
+namespace UNetwork
 {
     public sealed class Session
     {
